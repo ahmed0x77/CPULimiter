@@ -173,5 +173,13 @@ extern "C" {
         }
     }
 
-
+    __declspec(dllexport) int GetManagedPids(DWORD* pids_array, int max_size) {
+        std::lock_guard<std::mutex> lock(g_mutex);
+        int count = 0;
+        for (const auto& pair : g_managed_processes) {
+            if (count < max_size) pids_array[count++] = pair.first;
+            else break;
+        }
+        return count;
+    }
 }
