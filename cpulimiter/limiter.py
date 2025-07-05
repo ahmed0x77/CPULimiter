@@ -6,6 +6,12 @@ import pygetwindow as gw
 import win32process
 import os
 import time
+import logging
+
+# --- Library Logger ---
+logger = logging.getLogger("cpulimiter")
+logger.setLevel(logging.ERROR)  # Only log errors by default
+logger.addHandler(logging.NullHandler())
 
 # --- C++ Engine Loader (Singleton) ---
 class _Engine:
@@ -20,10 +26,11 @@ class _Engine:
             self._configure_functions()
             self.dll.StartLimiter()
             atexit.register(self.shutdown)
-            print("✅ CPU Limiter Engine (C++) Loaded and Started.")
+            logger.info("✅ CPU Limiter Engine (C++) Loaded and Started.")
 
         except (FileNotFoundError, OSError) as e:
-            print("❌ CRITICAL ERROR: Could not load limiter_engine.dll.")
+            logger.critical("❌ CRITICAL ERROR: Could not load limiter_engine.dll.")
+            print(f"❌ CRITICAL ERROR: Could not load limiter_engine.dll. {e}")
             raise RuntimeError(f"Engine loading failed: {e}. Ensure the 64-bit DLL is in the correct folder.")
 
     def _configure_functions(self):
@@ -46,7 +53,7 @@ class _Engine:
         if self.dll: self.dll.RemoveProcess(pid)
     def shutdown(self):
         if self.dll:
-            print("Shutting down C++ Limiter Engine...")
+            logger.info("Shutting down C++ Limiter Engine...")
             self.dll.StopLimiter()
             self.dll = None
 
@@ -138,9 +145,9 @@ class CpuLimiter:
                 engine.modify_process_limit(p, new_limit_percentage)
                 # Update the limit in the Python state
                 self._process_info[p]['limit_percentage'] = new_limit_percentage
-                print(f"✅ Modified limit for PID {p} to {100 - new_limit_percentage}% CPU.")
+                logger.info(f"✅ Modified limit for PID {p} to {100 - new_limit_percentage}% CPU.")
             else:
-                print(f"⚠️ Cannot modify PID {p}: it is not being actively limited. Use start() first.")
+                logger.warning(f"⚠️ Cannot modify PID {p}: it is not being actively limited. Use start() first.")
 
     def start_all(self):
         """Starts limiting all processes that have been added."""
