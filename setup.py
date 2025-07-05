@@ -13,6 +13,10 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Ahmed-Ashraf-dv/CPULimiter",
     packages=find_packages(),
+    include_package_data=True,
+    package_data={
+        'cpulimiter': ['limiter_engine.dll'],
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

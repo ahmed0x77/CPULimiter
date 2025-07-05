@@ -1,4 +1,4 @@
 include README.md
 include LICENSE
 recursive-include examples *.py
-recursive-include cpulimiter *.py
+recursive-include cpulimiter *.py *.dll

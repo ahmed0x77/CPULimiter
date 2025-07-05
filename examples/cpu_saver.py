@@ -12,7 +12,6 @@ Perfect for:
 - Performance optimization
 
 Requirements:
-- Administrator privileges (the script will try to restart itself with admin rights)
 - cpulimiter library: pip install cpulimiter
 """
 
@@ -45,12 +44,6 @@ IGNORE_LIST = {
     "csrss.exe",           # Client/Server Runtime
 }
 
-def is_admin():
-    """Checks if the script is running with Administrator privileges."""
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
 
 def main():
     """Main loop to monitor and save CPU automatically."""
@@ -132,18 +125,4 @@ def main():
         print("✅ CPU Saver stopped cleanly")
 
 if __name__ == "__main__":
-    # Check for admin privileges
-    if not is_admin():
-        print("🔐 Administrator privileges required for CPU Saver")
-        print("🔄 Attempting to restart with elevated privileges...")
-        try:
-            ctypes.windll.shell32.ShellExecuteW(
-                None, "runas", sys.executable, " ".join(sys.argv), None, 1
-            )
-        except Exception as e:
-            print(f"❌ Failed to restart with admin privileges: {e}")
-            print("💡 Please run this script as Administrator manually")
-        sys.exit(1)
-    else:
-        print("✅ Running with Administrator privileges")
-        main()
+    main()

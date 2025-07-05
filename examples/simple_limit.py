@@ -6,7 +6,7 @@ Perfect for beginners who want to understand the basic functionality.
 
 Usage:
 1. Install: pip install cpulimiter
-2. Run this script as Administrator
+2. Run this script
 3. The script will limit Chrome and Spotify to 10% CPU usage
 """
 
@@ -58,16 +58,4 @@ def main():
 
 
 if __name__ == "__main__":
-    import ctypes
-    import sys
-    # check if the script is run with Administrator 
-    if ctypes.windll.shell32.IsUserAnAdmin():
-        main()
-    else:
-        print("⚠️  This script requires Administrator privileges.")
-        choice = input("Do you want to restart with admin rights? (y/n): ").strip().lower()
-        if choice == 'y':
-            print("🔄 Attempting to re-launch with elevation...")
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-        else:
-            print("❌ Exiting. Please run as Administrator manually.")
+    main()

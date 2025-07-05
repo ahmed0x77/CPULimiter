@@ -157,20 +157,6 @@ def main():
             print("❌ Invalid choice")
 
 if __name__ == "__main__":
-    import ctypes
-    
-    # Check for admin privileges
-    try:
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        is_admin = False
-    
-    if not is_admin:
-        print("🔐 Administrator privileges required")
-        print("🔄 Please run as Administrator")
-        input("Press Enter to exit...")
-        sys.exit(1)
-    
     try:
         main()
     except KeyboardInterrupt:

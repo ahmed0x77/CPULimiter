@@ -7,7 +7,7 @@ import time
 # 1. Initialize the limiter
 limiter = CpuLimiter()
 
-app_name = "notepad.exe"
+app_name = "chrome.exe"
 
 # 3. Add the process to the limiter
 limiter.add(process_name=app_name, limit_percentage=95)
