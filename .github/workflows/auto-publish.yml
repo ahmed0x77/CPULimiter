@@ -2,12 +2,12 @@ name: Auto Version Bump and Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'cpulimiter/**'
-      - 'setup.py'
-      - 'pyproject.toml'
-  workflow_dispatch:  # Allow manual trigger
+      - "cpulimiter/**"
+      - "setup.py"
+      - "pyproject.toml"
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   bump-version:
@@ -15,88 +15,124 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+
     steps:
-    - uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build twine bump2version setuptools
-    
-    - name: Configure Git
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-    
-    - name: Bump patch version
-      run: |
-        # Get current version from setup.py
-        current_version=$(python setup.py --version)
-        echo "Current version: $current_version"
-        
-        # Bump patch version (e.g., 1.0.0 -> 1.0.1)
-        python -c "
-        import re
-        with open('setup.py', 'r') as f:
-            content = f.read()
-        version_match = re.search(r'version=\"([^\"]+)\"', content)
-        if version_match:
-            old_version = version_match.group(1)
-            version_parts = old_version.split('.')
-            version_parts[-1] = str(int(version_parts[-1]) + 1)
-            new_version = '.'.join(version_parts)
-            new_content = content.replace(f'version=\"{old_version}\"', f'version=\"{new_version}\"')
-            with open('setup.py', 'w') as f:
-                f.write(new_content)
-            print(f'Updated version from {old_version} to {new_version}')
-        "
-        
-        # Update pyproject.toml as well
-        python -c "
-        import re
-        with open('pyproject.toml', 'r') as f:
-            content = f.read()
-        version_match = re.search(r'version = \"([^\"]+)\"', content)
-        if version_match:
-            old_version = version_match.group(1)
-            version_parts = old_version.split('.')
-            version_parts[-1] = str(int(version_parts[-1]) + 1)
-            new_version = '.'.join(version_parts)
-            new_content = content.replace(f'version = \"{old_version}\"', f'version = \"{new_version}\"')
-            with open('pyproject.toml', 'w') as f:
-                f.write(new_content)
-            print(f'Updated pyproject.toml version from {old_version} to {new_version}')
-        "
-    
-    - name: Get new version
-      id: version
-      run: |
-        new_version=$(python setup.py --version)
-        echo "new_version=$new_version" >> $GITHUB_OUTPUT
-        echo "New version: $new_version"
-    
-    - name: Build package
-      run: python -m build
-    
-    - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
-    
-    - name: Commit version bump
-      run: |
-        git add setup.py pyproject.toml
-        git commit -m "🚀 Bump version to ${{ steps.version.outputs.new_version }} [skip-version]"
-        git tag "v${{ steps.version.outputs.new_version }}"
-        git push origin main
-        git push origin "v${{ steps.version.outputs.new_version }}"
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine bump2version setuptools
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Determine version bump type
+        id: bump_type
+        run: |
+          commit_message="${{ github.event.head_commit.message }}"
+          if [[ "$commit_message" == *"[major]"* ]]; then
+            echo "bump_type=major" >> $GITHUB_OUTPUT
+          elif [[ "$commit_message" == *"[minor]"* ]]; then
+            echo "bump_type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump_type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        run: |
+          # Get current version from setup.py
+          current_version=$(python setup.py --version)
+          echo "Current version: $current_version"
+
+          # Determine new version based on bump type
+          python -c "
+          import re
+          bump_type = '${{ steps.bump_type.outputs.bump_type }}'
+
+          with open('setup.py', 'r') as f:
+              content = f.read()
+          version_match = re.search(r'version=\"([^\"]+)\"', content)
+          if version_match:
+              old_version = version_match.group(1)
+              version_parts = [int(x) for x in old_version.split('.')]
+              
+              if bump_type == 'major':
+                  version_parts[0] += 1
+                  version_parts[1] = 0
+                  version_parts[2] = 0
+              elif bump_type == 'minor':
+                  version_parts[1] += 1
+                  version_parts[2] = 0
+              else:  # patch
+                  version_parts[2] += 1
+              
+              new_version = '.'.join(map(str, version_parts))
+              new_content = content.replace(f'version=\"{old_version}\"', f'version=\"{new_version}\"')
+              with open('setup.py', 'w') as f:
+                  f.write(new_content)
+              print(f'Updated version from {old_version} to {new_version} ({bump_type} bump)')
+          "
+
+          # Update pyproject.toml as well
+          python -c "
+          import re
+          bump_type = '${{ steps.bump_type.outputs.bump_type }}'
+
+          with open('pyproject.toml', 'r') as f:
+              content = f.read()
+          version_match = re.search(r'version = \"([^\"]+)\"', content)
+          if version_match:
+              old_version = version_match.group(1)
+              version_parts = [int(x) for x in old_version.split('.')]
+              
+              if bump_type == 'major':
+                  version_parts[0] += 1
+                  version_parts[1] = 0
+                  version_parts[2] = 0
+              elif bump_type == 'minor':
+                  version_parts[1] += 1
+                  version_parts[2] = 0
+              else:  # patch
+                  version_parts[2] += 1
+              
+              new_version = '.'.join(map(str, version_parts))
+              new_content = content.replace(f'version = \"{old_version}\"', f'version = \"{new_version}\"')
+              with open('pyproject.toml', 'w') as f:
+                  f.write(new_content)
+              print(f'Updated pyproject.toml version from {old_version} to {new_version} ({bump_type} bump)')
+          "
+
+      - name: Get new version
+        id: version
+        run: |
+          new_version=$(python setup.py --version)
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          echo "New version: $new_version"
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload dist/*
+
+      - name: Commit version bump
+        run: |
+          git add setup.py pyproject.toml
+          git commit -m "🚀 Bump version to ${{ steps.version.outputs.new_version }} [${{ steps.bump_type.outputs.bump_type }}] [skip-version]"
+          git tag "v${{ steps.version.outputs.new_version }}"
+          git push origin main
+          git push origin "v${{ steps.version.outputs.new_version }}"
