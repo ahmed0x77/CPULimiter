@@ -116,9 +116,30 @@ class _ProcessLimiter:
 
 class CpuLimiter:
     """Manages and applies CPU limits to one or more processes."""
-    def __init__(self):
-        self._limiters = {}  # Stores {_ProcessLimiter object}
-        self._process_info = {} # Stores info about the processes being limited
+    def __init__(self, processes_to_limit: dict = None):
+        """
+        Initializes the CpuLimiter.
+
+        Args:
+            processes_to_limit (dict, optional): A dictionary where keys are process identifiers
+                                                 (name, pid, or window title part) and values are
+                                                 the limit percentage. If provided, automatically
+                                                 adds and starts limiting these processes.
+                                                 Example: {"chrome.exe": 95, 1234: 90}
+        """
+        self._limiters = {}  # Stores {pid: _ProcessLimiter object}
+        self._process_info = {} # Stores {pid: info dict}
+
+        if processes_to_limit:
+            for identifier, limit in processes_to_limit.items():
+                # Determine the type of identifier and call add() accordingly
+                if isinstance(identifier, int): # PID
+                    self.add(pid=identifier, limit_percentage=limit)
+                elif isinstance(identifier, str) and (identifier.endswith(".exe") or "." in identifier): # Process Name
+                    self.add(process_name=identifier, limit_percentage=limit)
+                elif isinstance(identifier, str): # Window Title
+                    self.add(window_title_contains=identifier, limit_percentage=limit)
+            self.start_all()
 
     def _find_pids_by_name(self, process_name):
         pids = []
@@ -162,6 +183,15 @@ class CpuLimiter:
                 }
                 self._limiters[p] = _ProcessLimiter(p, limit_percentage)
 
+    def remove(self, pid=None, process_name=None, window_title_contains=None):
+        """Removes a process from the limiter."""
+        pids_to_remove = self._get_pids_for_criteria(pid, process_name, window_title_contains)
+        for p in pids_to_remove:
+            if p in self._limiters:
+                self._limiters[p].stop()
+                del self._limiters[p]
+                del self._process_info[p]
+
     def start(self, pid=None, process_name=None, window_title_contains=None):
         """Starts limiting a specific process/group that has been added."""
         pids_to_start = self._get_pids_for_criteria(pid, process_name, window_title_contains)
@@ -186,6 +216,10 @@ class CpuLimiter:
         for limiter in self._limiters.values():
             limiter.stop()
 
+    def shutdown(self):
+        """A convenient alias for stop_all()."""
+        self.stop_all()
+
     def get_active(self):
         """Returns a list of actively limited processes."""
         return [info for pid, info in self._process_info.items() if self._limiters[pid].active]
@@ -202,3 +236,4 @@ class CpuLimiter:
             if window_title_contains and info["window_title_contains"] == window_title_contains:
                 found_pids.append(p)
         return found_pids
+

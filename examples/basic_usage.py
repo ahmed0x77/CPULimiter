@@ -1,43 +1,29 @@
 from cpulimiter import CpuLimiter
 import time
-import psutil
 
-def find_pid_by_name(process_name):
-    """Helper function to find a PID by its name."""
-    for proc in psutil.process_iter(['pid', 'name']):
-        if proc.info['name'] == process_name:
-            return proc.info['pid']
-    return None
 
 # --- Example Usage ---
 
 # 1. Initialize the limiter
 limiter = CpuLimiter()
 
-# 2. Find a process to limit (e.g., Notepad)
-#    (You can open Notepad to test this)
-notepad_pid = find_pid_by_name("notepad.exe")
+app_name = "notepad.exe"
 
-if notepad_pid:
-    print(f"Found Notepad with PID: {notepad_pid}")
+# 3. Add the process to the limiter
+limiter.add(process_name=app_name, limit_percentage=95)
 
-    # 3. Add the process to the limiter
-    limiter.add(pid=notepad_pid, limit_percentage=95)
+# 4. Start limiting
+print("Starting to limit Notepad for 15 seconds...")
+limiter.start(process_name=app_name)
 
-    # 4. Start limiting
-    print("Starting to limit Notepad for 15 seconds...")
-    limiter.start(pid=notepad_pid)
+# You can check the task manager to see the effect.
+time.sleep(15)
 
-    # You can check the task manager to see the effect.
-    time.sleep(15)
+# 5. Stop limiting
+print("Stopping the limit.")
+limiter.stop(process_name=app_name)
 
-    # 5. Stop limiting
-    print("Stopping the limit.")
-    limiter.stop(pid=notepad_pid)
-
-    print("Limiting has been stopped.")
-else:
-    print("Notepad is not running. Please open it and run the script again.")
+print("Limiting has been stopped.")
 
 # --- Example with multiple processes ---
 

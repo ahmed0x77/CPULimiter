@@ -57,17 +57,18 @@ def main():
         print("✅ All limits removed. Applications restored to normal speed.")
 
 
+def is_admin():
+    """Checks if the script is running with Administrator privileges."""
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
 if __name__ == "__main__":
     import ctypes
     import sys
-    # check if the script is run with Administrator 
-    if ctypes.windll.shell32.IsUserAnAdmin():
+    if is_admin():
         main()
     else:
-        print("⚠️  This script requires Administrator privileges.")
-        choice = input("Do you want to restart with admin rights? (y/n): ").strip().lower()
-        if choice == 'y':
-            print("🔄 Attempting to re-launch with elevation...")
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-        else:
-            print("❌ Exiting. Please run as Administrator manually.")
+        print("Admin rights required. Attempting to re-launch with elevation...")
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)

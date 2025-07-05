@@ -1,11 +1,11 @@
 """
-CPU Limiter
-A Python library to limit the CPU usage of processes.
+cpulimiter - A simple, lightweight Python library for Windows to limit CPU usage of processes.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.5.0"
+__author__ = "Ahmed Ashraf"
 
 from .limiter import CpuLimiter
-from .utils import get_active_app_pids, get_active_window_info
+from .utils import get_active_window_info, get_active_app_pids
 
-__all__ = ["CpuLimiter", "get_active_app_pids", "get_active_window_info"], get_active_window_info
+__all__ = ["CpuLimiter", "get_active_window_info", "get_active_app_pids"]

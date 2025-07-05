@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cpulimiter",
-    version="1.0.0",
-    author="ahmed0x77",
-    author_email="ahmed0x77@github.com",
-    description="A Python library for Windows to programmatically limit the CPU usage of running processes",
+    version="1.5.0",
+    author="Ahmed Ashraf",
+    author_email="your-email@example.com",
+    description="A simple, lightweight Python library for Windows to limit the CPU usage of any running process",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ahmed0x77/cpulimiter",
+    url="https://github.com/Ahmed-Ashraf-dv/CPULimiter",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -24,7 +24,6 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
         "Topic :: System :: Monitoring",
         "Topic :: System :: Systems Administration",
     ],
@@ -34,5 +33,6 @@ setup(
         "pygetwindow>=0.0.9",
         "pywin32>=227",
     ],
-    keywords="cpu limit throttle process windows performance",
+    keywords="cpu limiter throttle process windows performance",
 )
+
