@@ -43,37 +43,37 @@ jobs:
         
         # Bump patch version (e.g., 1.0.0 -> 1.0.1)
         python -c "
-import re
-with open('setup.py', 'r') as f:
-    content = f.read()
-version_match = re.search(r'version=\"([^\"]+)\"', content)
-if version_match:
-    old_version = version_match.group(1)
-    version_parts = old_version.split('.')
-    version_parts[-1] = str(int(version_parts[-1]) + 1)
-    new_version = '.'.join(version_parts)
-    new_content = content.replace(f'version=\"{old_version}\"', f'version=\"{new_version}\"')
-    with open('setup.py', 'w') as f:
-        f.write(new_content)
-    print(f'Updated version from {old_version} to {new_version}')
-"
+        import re
+        with open('setup.py', 'r') as f:
+            content = f.read()
+        version_match = re.search(r'version=\"([^\"]+)\"', content)
+        if version_match:
+            old_version = version_match.group(1)
+            version_parts = old_version.split('.')
+            version_parts[-1] = str(int(version_parts[-1]) + 1)
+            new_version = '.'.join(version_parts)
+            new_content = content.replace(f'version=\"{old_version}\"', f'version=\"{new_version}\"')
+            with open('setup.py', 'w') as f:
+                f.write(new_content)
+            print(f'Updated version from {old_version} to {new_version}')
+        "
         
         # Update pyproject.toml as well
         python -c "
-import re
-with open('pyproject.toml', 'r') as f:
-    content = f.read()
-version_match = re.search(r'version = \"([^\"]+)\"', content)
-if version_match:
-    old_version = version_match.group(1)
-    version_parts = old_version.split('.')
-    version_parts[-1] = str(int(version_parts[-1]) + 1)
-    new_version = '.'.join(version_parts)
-    new_content = content.replace(f'version = \"{old_version}\"', f'version = \"{new_version}\"')
-    with open('pyproject.toml', 'w') as f:
-        f.write(new_content)
-    print(f'Updated pyproject.toml version from {old_version} to {new_version}')
-"
+        import re
+        with open('pyproject.toml', 'r') as f:
+            content = f.read()
+        version_match = re.search(r'version = \"([^\"]+)\"', content)
+        if version_match:
+            old_version = version_match.group(1)
+            version_parts = old_version.split('.')
+            version_parts[-1] = str(int(version_parts[-1]) + 1)
+            new_version = '.'.join(version_parts)
+            new_content = content.replace(f'version = \"{old_version}\"', f'version = \"{new_version}\"')
+            with open('pyproject.toml', 'w') as f:
+                f.write(new_content)
+            print(f'Updated pyproject.toml version from {old_version} to {new_version}')
+        "
     
     - name: Get new version
       id: version
