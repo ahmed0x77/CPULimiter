@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cpulimiter",
-    version="1.0.7",
+    version="1.0.8",
     author="Ahmed Ashraf",
     author_email="your-email@example.com",
     description="A simple, lightweight Python library for Windows to limit the CPU usage of any running process",
