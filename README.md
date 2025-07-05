@@ -43,6 +43,15 @@ limiter.stop(process_name="chrome.exe")
 print("Process limit removed.")
 ```
 
+## Examples 📚
+
+Check out the `examples/` folder for different use cases:
+
+- **`basic_usage.py`** - Simple introduction to the library
+- **`simple_limit.py`** - Manually limit specific applications
+- **`cpu_saver.py`** - Automatic CPU saver that limits all background apps
+- **`advanced_interactive.py`** - Interactive mode with real-time control
+
 ## API Reference
 
 ### `CpuLimiter` Class
