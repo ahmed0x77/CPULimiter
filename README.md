@@ -1,4 +1,4 @@
-# cpulimiter 🚀
+# cpulimiter 🌡️
 
 [![PyPI version](https://img.shields.io/pypi/v/cpulimiter.svg)](https://pypi.org/project/cpulimiter/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cpulimiter.svg)](https://pypi.org/project/cpulimiter/)
