@@ -53,3 +53,47 @@ def get_active_window_info():
         # Handle cases where window disappears or process is inaccessible
         return None
     return None
+
+def emergency_resume_chrome():
+    """
+    Attempts to force resume all Chrome processes using NtResumeProcess.
+    This is a last resort to recover unresponsive Chrome instances.
+    """
+    import ctypes
+    from ctypes import wintypes
+    import psutil
+
+    # Load ntdll.dll to access NtResumeProcess
+    ntdll = ctypes.WinDLL('ntdll')
+    NtResumeProcess = ntdll.NtResumeProcess
+    NtResumeProcess.argtypes = [wintypes.HANDLE]
+    NtResumeProcess.restype = wintypes.DWORD
+
+    # Find all Chrome processes
+    chrome_pids = [p.pid for p in psutil.process_iter(['pid', 'name']) 
+                if 'chrome' in p.info['name'].lower()]
+
+    print(f"Found {len(chrome_pids)} Chrome processes - attempting to force resume...")
+
+    # Try to resume each Chrome process directly
+    for pid in chrome_pids:
+        try:
+            # Open the process with full access rights
+            process_handle = ctypes.windll.kernel32.OpenProcess(
+                0x1FFFFF,  # PROCESS_ALL_ACCESS
+                False,
+                pid
+            )
+            
+            if process_handle:
+                # Call NtResumeProcess directly
+                status = NtResumeProcess(process_handle)
+                print(f"PID {pid}: Resume status {status}")
+                ctypes.windll.kernel32.CloseHandle(process_handle)
+            else:
+                print(f"Could not open PID {pid}")
+        except Exception as e:
+            print(f"Error with PID {pid}: {e}")
+
+    print("Attempted to force-resume all Chrome processes.")
+    print("Chrome should become responsive within a few seconds.")
