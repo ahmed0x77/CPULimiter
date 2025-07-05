@@ -125,3 +125,34 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🛠️ Legacy Version
+
+In addition to the main `cpulimiter` library, which uses a high-performance C++ backend (`limiter_engine.dll`), there is also a **legacy version** available in `limiter_legacy.py`. This version is written entirely in Python and does not require any DLL files.
+
+### When to Use the Legacy Version?
+
+The legacy version might be suitable for specific use cases, such as:
+
+- **Media Applications**: Limiting CPU usage for processes like video players or music players without causing issues like cracked or distorted sound.
+- **No DLL Dependency**: If you prefer not to use the C++ backend or cannot load the DLL file for any reason.
+
+### Key Differences
+
+| Feature                | Main Version (C++)         | Legacy Version (Python) |
+|------------------------|----------------------------|--------------------------|
+| **Performance**        | Very lightweight, uses minimal CPU. | May use more CPU due to Python overhead. |
+| **Dependency**         | Requires `limiter_engine.dll`. | No external dependencies. |
+| **Precision**          | High precision for CPU throttling. | Slightly less precise. |
+| **Use Case**           | General-purpose CPU limiting. | Media applications or environments without DLL support. |
+
+To use the legacy version, simply import the `limiter_legacy` module and then use its `CpuLimiter` class:
+
+```python
+from cpulimiter.limiter_legacy import CpuLimiter
+
+# Note: You are now using the Python-based legacy limiter
+limiter = CpuLimiter({"chrome.exe": 90})
+
+# ... rest of your code
+```
