@@ -1,0 +1,13 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.py
+cpulimiter/__init__.py
+cpulimiter/limiter.py
+cpulimiter/utils.py
+cpulimiter.egg-info/PKG-INFO
+cpulimiter.egg-info/SOURCES.txt
+cpulimiter.egg-info/dependency_links.txt
+cpulimiter.egg-info/requires.txt
+cpulimiter.egg-info/top_level.txt

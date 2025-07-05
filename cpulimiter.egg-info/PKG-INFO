@@ -1,3 +1,39 @@
+Metadata-Version: 2.4
+Name: cpulimiter
+Version: 1.0.0
+Summary: A Python library for Windows to programmatically limit the CPU usage of running processes
+Home-page: https://github.com/ahmed0x77/cpulimiter
+Author: ahmed0x77
+Author-email: ahmed0x77 <ahmed0x77@github.com>
+License: MIT
+Project-URL: Homepage, https://github.com/ahmed0x77/cpulimiter
+Project-URL: Repository, https://github.com/ahmed0x77/cpulimiter
+Project-URL: Issues, https://github.com/ahmed0x77/cpulimiter/issues
+Keywords: cpu,limit,throttle,process,windows,performance
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: System :: Monitoring
+Classifier: Topic :: System :: Systems Administration
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: psutil>=5.8.0
+Requires-Dist: pygetwindow>=0.0.9
+Requires-Dist: pywin32>=227
+Dynamic: author
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-python
+
 # cpulimiter 🚀
 
 A Python library for Windows to limit the CPU usage of running processes.
@@ -14,6 +50,8 @@ A Python library for Windows to limit the CPU usage of running processes.
 ```bash
 pip install cpulimiter
 ```
+
+_(Note: This package is not yet published to PyPI.)_
 
 ## Quick Start 📖
 

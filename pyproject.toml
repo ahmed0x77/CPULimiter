@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cpulimiter"
+version = "1.0.0"
+description = "A Python library for Windows to programmatically limit the CPU usage of running processes"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "ahmed0x77", email = "ahmed0x77@github.com"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Systems Administration",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "psutil>=5.8.0",
+    "pygetwindow>=0.0.9",
+    "pywin32>=227",
+]
+keywords = ["cpu", "limit", "throttle", "process", "windows", "performance"]
+
+[project.urls]
+Homepage = "https://github.com/ahmed0x77/cpulimiter"
+Repository = "https://github.com/ahmed0x77/cpulimiter"
+Issues = "https://github.com/ahmed0x77/cpulimiter/issues"
