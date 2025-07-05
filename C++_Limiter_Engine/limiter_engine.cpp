@@ -164,6 +164,27 @@ extern "C" {
         g_managed_processes[pid] = info;
     }
 
+    __declspec(dllexport) void ModifyProcessLimit(DWORD pid, int new_limit_percentage) {
+        std::lock_guard<std::mutex> lock(g_mutex);
+        auto it = g_managed_processes.find(pid);
+        if (it != g_managed_processes.end()) {
+            ProcessInfo& info = it->second;
+            
+            double cycle_time_ms = 200.0; // This must be consistent with AddProcess
+            info.suspend_ms = cycle_time_ms * (new_limit_percentage / 100.0);
+            info.resume_ms = cycle_time_ms - info.suspend_ms;
+            if (info.resume_ms < 1) info.resume_ms = 1;
+            if (info.suspend_ms < 1) info.suspend_ms = 1;
+
+            // --- FIX: Reset the state change time to apply the new limit immediately ---
+            info.next_state_change_time = std::chrono::steady_clock::now();
+            if (info.is_suspended) {
+                NtResumeProcess(info.hProcess);
+                info.is_suspended = false;
+            }
+        }
+    }
+
     __declspec(dllexport) void RemoveProcess(DWORD pid) {
         std::lock_guard<std::mutex> lock(g_mutex);
         auto it = g_managed_processes.find(pid);

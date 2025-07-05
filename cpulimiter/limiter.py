@@ -33,11 +33,15 @@ class _Engine:
         self.dll.AddProcess.restype = None
         self.dll.RemoveProcess.argtypes = [ctypes.wintypes.DWORD]
         self.dll.RemoveProcess.restype = None
+        self.dll.ModifyProcessLimit.argtypes = [ctypes.wintypes.DWORD, ctypes.c_int]
+        self.dll.ModifyProcessLimit.restype = None
         self.dll.GetManagedPids.argtypes = [ctypes.POINTER(ctypes.wintypes.DWORD), ctypes.c_int]
         self.dll.GetManagedPids.restype = ctypes.c_int
 
     def add_process(self, pid, limit):
         if self.dll: self.dll.AddProcess(pid, limit)
+    def modify_process_limit(self, pid, limit):
+        if self.dll: self.dll.ModifyProcessLimit(pid, limit)
     def remove_process(self, pid):
         if self.dll: self.dll.RemoveProcess(pid)
     def shutdown(self):
@@ -81,14 +85,21 @@ class CpuLimiter:
         return list(pids)
 
     def add(self, pid=None, process_name=None, window_title_contains=None, limit_percentage=98):
-        """Adds a process to be managed. Does NOT start limiting it yet."""
+        """Adds a process to be managed. If the process is already managed, this modifies its limit."""
         if not any([pid, process_name, window_title_contains]): raise ValueError("Must provide an identifier.")
         target_pids = []
         if pid: target_pids.append(pid)
         if process_name: target_pids.extend(self._find_pids_by_name(process_name))
         if window_title_contains: target_pids.extend(self._find_pids_by_window_title(window_title_contains))
         for p in set(target_pids):
-            if p not in self._process_info:
+            # If the process is already managed, this call will modify its limit.
+            if p in self._process_info:
+                self._process_info[p]['limit_percentage'] = limit_percentage
+                # If it's actively being limited, apply the new limit immediately.
+                if p in self._active_pids:
+                    engine.modify_process_limit(p, limit_percentage)
+            else:
+                # Otherwise, add it as a new managed process.
                 self._process_info[p] = { "pid": p, "process_name": process_name, "window_title_contains": window_title_contains, "limit_percentage": limit_percentage }
 
     def remove(self, pid=None, process_name=None, window_title_contains=None):
@@ -117,6 +128,19 @@ class CpuLimiter:
             if p in self._active_pids:
                 engine.remove_process(p)
                 self._active_pids.remove(p)
+
+    def modify_limit(self, pid=None, process_name=None, window_title_contains=None, new_limit_percentage=98):
+        """Modifies the CPU limit for a specific, actively limited process/group."""
+        pids_to_modify = self._get_pids_for_criteria(pid, process_name, window_title_contains)
+        for p in pids_to_modify:
+            if p in self._active_pids:
+                # Update the limit in the C++ engine
+                engine.modify_process_limit(p, new_limit_percentage)
+                # Update the limit in the Python state
+                self._process_info[p]['limit_percentage'] = new_limit_percentage
+                print(f"✅ Modified limit for PID {p} to {100 - new_limit_percentage}% CPU.")
+            else:
+                print(f"⚠️ Cannot modify PID {p}: it is not being actively limited. Use start() first.")
 
     def start_all(self):
         """Starts limiting all processes that have been added."""

@@ -18,7 +18,6 @@ Have you ever had a program like `Google Chrome`, a game, or a background task c
 - 🔋 Saving battery life on laptops by reducing the power consumption of demanding applications.
 - 🤫 Quieting down noisy CPU fans.
 
-
 ## ✨ Features
 
 - 🎯 **Limit CPU Usage:** Throttle process CPU usage to a specific percentage.
@@ -54,7 +53,8 @@ time.sleep(15)
 limiter.shutdown()
 print("CPU limit removed. Chrome is back to normal.")
 ```
-*You can check your Task Manager to see the effect in real-time!*
+
+_You can check your Task Manager to see the effect in real-time!_
 
 ## ⚙️ How It Works
 
@@ -68,6 +68,7 @@ Check out the `examples/` folder for more advanced use cases:
 - **`simple_limit.py`** - Manually limit a list of specific applications.
 - **`cpu_saver.py`** - An automatic CPU saver that throttles all applications that are not in the foreground.
 - **`advanced_interactive.py`** - An interactive command-line tool for real-time process management.
+- **`modify_limit_example.py`** - Demonstrates how to change the CPU limit of a process that is already being managed.
 
 ## API Reference
 
@@ -77,12 +78,19 @@ The primary class for managing process limits.
 
 #### `limiter.add(pid, process_name, window_title_contains, limit_percentage)`
 
-Adds a process to the limiter's management list.
+Adds a process to the limiter's management list. If the process is already managed, this will update its CPU limit percentage.
 
 - `pid` (int): The Process ID.
 - `process_name` (str): The executable name (e.g., `"chrome.exe"`).
 - `window_title_contains` (str): A substring to match in a window title.
 - `limit_percentage` (int): The percentage by which to limit the CPU (e.g., `95` means the process can use up to 5% of a core).
+
+#### `limiter.modify_limit(pid, process_name, window_title_contains, new_limit_percentage)`
+
+Modifies the CPU limit for a process that is already being actively limited.
+
+- `pid`, `process_name`, `window_title_contains`: Identifiers for the process to modify.
+- `new_limit_percentage` (int): The new limit to apply.
 
 #### `limiter.start(pid, process_name, window_title_contains)`
 
