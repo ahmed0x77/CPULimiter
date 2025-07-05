@@ -1,6 +1,7 @@
-MIT License
+MIT License with Anti-Plagiarism Protection
 
-Copyright (c) 2025 Ahmed Ashraf
+Copyright (c) 2025 Ahmed Ashraf (@ahmed0x77)
+Original Project: https://github.com/ahmed0x77/cpulimiter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,8 +10,25 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+STANDARD USE (Installing via pip and using in your projects):
+
+- No attribution required in your project documentation
+- Use freely in commercial and personal projects
+- No need to credit in your README or code comments
+
+REDISTRIBUTION & MODIFICATION REQUIREMENTS:
+If you redistribute, fork, or create derivative works of this Software:
+
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+2. You must clearly indicate that the original work was created by Ahmed Ashraf
+3. You must include a link to: https://github.com/ahmed0x77/cpulimiter
+
+ANTI-PLAGIARISM CLAUSE:
+You may NOT claim to be the original author, creator, or inventor of the
+cpulimiter library or its core CPU limiting functionality. Ahmed Ashraf
+shall be recognized as the original author if you redistribute or create
+derivative works based on this Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
