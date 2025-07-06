@@ -4,7 +4,7 @@
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/cpulimiter.svg)](https://pypi.org/project/cpulimiter/)
 [![PyPI license](https://img.shields.io/pypi/l/cpulimiter.svg)](https://github.com/Ahmed-Ashraf-dv/CPULimiter/blob/main/LICENSE)
 
-A simple, lightweight Python library for Windows to limit the CPU usage of any running process.
+A simple, lightweight Python library for Windows to limit and control the CPU usage of any running process.
 
 ## 📖 Quick Start
 
