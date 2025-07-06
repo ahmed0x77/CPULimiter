@@ -58,7 +58,7 @@ The secret to `cpulimiter`'s high performance and low overhead is its **native C
 
 Instead of complex calculations, it uses a simple but powerful technique: rapidly **pausing** and **resuming** the entire target application. To achieve a 90% limit, the engine might pause the process for 180 milliseconds and then let it run for 20 milliseconds. This cycle happens so quickly that the application remains responsive, but its total CPU time is drastically reduced.
 
-Because this logic is handled by highly optimized C++, the limiter itself uses **virtually zero CPU power**. It intelligently sleeps and only acts when necessary, ensuring it never contributes to the problem it's trying to solve.
+This project is inspired by the classic utility BES (Battle Encoder Shirasé), but is designed to be a modern and **significantly more lightweight** alternative. By using a minimal, highly-optimized C++ engine, `cpulimiter` avoids the overhead found in older tools, making it exceptionally efficient.
 
 ## 📚 Examples
 
