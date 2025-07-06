@@ -12,7 +12,7 @@ import pystray
 DEFAULT_IGNORED_APPS = {
     "explorer.exe", "svchost.exe", "powershell.exe", "cmd.exe",
     "WindowsTerminal.exe", "python.exe", "conhost.exe", "dwm.exe",
-    "winlogon.exe", "csrss.exe", "RuntimeBroker.exe", "startmenuexperiencehost.exe"
+    "winlogon.exe", "csrss.exe", "RuntimeBroker.exe", "startmenuexperiencehost.exe", "pythonw.exe"
 }
 
 # --- UI Theme and Fonts ---
